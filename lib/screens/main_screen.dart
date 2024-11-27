@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/screens/auth_screen.dart';
+import 'package:todo_app/screens/calendar_screen.dart';
+import 'package:todo_app/screens/sticky_wall_screen.dart';
+import 'package:todo_app/screens/tasks_screen.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({super.key});
@@ -28,6 +31,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   bool _isTaksClicked = true;
+  bool _isCalendarClicked = false;
+  bool _isStickyWakkClicked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +79,10 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.login_outlined),
-                            onPressed: () {
-                              () async {
+                              onPressed: () async {
                                 await _logout(context);
-                              };
-                            },
-                          ),
+                              },
+                              icon: Icon(Icons.logout_outlined)),
                         ],
                       )),
                   const Divider(),
@@ -105,7 +107,9 @@ class _MainScreenState extends State<MainScreen> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        _isTaksClicked = !_isTaksClicked;
+                        _isTaksClicked = true;
+                        _isCalendarClicked = false;
+                        _isStickyWakkClicked = false;
                       });
                     },
                     splashColor: Colors.green, // Ripple color on tap
@@ -115,11 +119,23 @@ class _MainScreenState extends State<MainScreen> {
                     child: _buildMenuItem(Icons.event_note, 'Tasks', 12),
                   ),
                   InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          _isCalendarClicked = true;
+                          _isTaksClicked = false;
+                          _isStickyWakkClicked = false;
+                        });
+                      },
                       child:
                           _buildMenuItem(Icons.calendar_today, 'Calendar', 0)),
                   InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          _isStickyWakkClicked = true;
+                          _isCalendarClicked = false;
+                          _isTaksClicked = false;
+                        });
+                      },
                       child: _buildMenuItem(
                           Icons.sticky_note_2, 'Sticky Wall', 0)),
                   const Divider(),
@@ -156,97 +172,24 @@ class _MainScreenState extends State<MainScreen> {
               flex: 4,
               child: Container(
                 color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title and Task Count
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Today',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '5',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Add New Task Button
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: Icon(Icons.add),
-                        label: Text('Add New Task'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                    // Task List
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          _buildTaskItem(
-                            'Research content ideas',
-                            'List 1',
-                            false,
-                          ),
-                          _buildTaskItem(
-                            'Create a database of guest authors',
-                            'Work',
-                            false,
-                          ),
-                          _buildTaskItem(
-                            'Renew driver\'s license',
-                            'Personal',
-                            true,
-                            dueDate: '22-03-22',
-                            subtasks: 1,
-                            color: Colors.red,
-                          ),
-                          _buildTaskItem(
-                            'Consult accountant',
-                            'List',
-                            true,
-                            subtasks: 3,
-                          ),
-                          _buildTaskItem('Print business card', '', false),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          if (!_isTaksClicked)
-            Expanded(
-              flex: 4,
-              child: Container(
-                child: Center(
-                  child: Text(
-                    'Nothing to view !',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        letterSpacing: 2.5),
-                  ),
-                ),
+                child: TasksScreen(),
               ),
             ),
           // Task Details
+          if (_isCalendarClicked)
+            Expanded(
+              flex: 4,
+              child: Container(
+                child: CalendarScreen(),
+              ),
+            ),
+          if (_isStickyWakkClicked)
+            Expanded(
+              flex: 4,
+              child: Container(
+                child: StickyWallScreen(),
+              ),
+            ),
           Expanded(
             flex: 3,
             child: Container(
@@ -328,27 +271,6 @@ class _MainScreenState extends State<MainScreen> {
       leading: Icon(icon, color: color ?? Colors.black),
       title: Text(title),
       trailing: count > 0 ? Text(count.toString()) : null,
-    );
-  }
-
-  Widget _buildTaskItem(String title, String list, bool hasDetails,
-      {String? dueDate, int subtasks = 0, Color? color}) {
-    return ListTile(
-      title: Text(title),
-      subtitle: hasDetails
-          ? Row(
-              children: [
-                if (dueDate != null) Text(dueDate),
-                if (subtasks > 0) Text(' | $subtasks Subtasks'),
-                if (list.isNotEmpty)
-                  Text(
-                    ' | $list',
-                    style: TextStyle(color: color ?? Colors.black),
-                  ),
-              ],
-            )
-          : null,
-      trailing: Checkbox(value: false, onChanged: (bool? value) {}),
     );
   }
 }
