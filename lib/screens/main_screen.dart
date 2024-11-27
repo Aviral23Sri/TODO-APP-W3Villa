@@ -1,14 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:todo_app/screens/auth_screen.dart';
 
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
 
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AuthenticationScreen()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logged out successfully!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to log out: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await _logout(context);
+              },
+              icon: Icon(Icons.logout_outlined))
+        ],
+        title: Text(
+          'All TODOs',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Row(
         children: [
-          // Sidebar
+          // Sidebar For Tasks and List
           Expanded(
             flex: 2,
             child: Container(

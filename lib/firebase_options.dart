@@ -33,7 +33,10 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -58,19 +61,9 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAZgmNob8DUH-njvZAleGUKdX_ITc2xYdg',
-    appId: '1:765088895247:android:5e782938e6a71f0ba7ee7a',
+    appId: '1:765088895247:android:c6f40b231cf41fa4a7ee7a',
     messagingSenderId: '765088895247',
     projectId: 'todo-app-e9f78',
     storageBucket: 'todo-app-e9f78.firebasestorage.app',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyB5wwJd-HcuBkf-_Fb9RPNSQRB4gYElwFU',
-    appId: '1:765088895247:web:ebb6270f0da05daaa7ee7a',
-    messagingSenderId: '765088895247',
-    projectId: 'todo-app-e9f78',
-    authDomain: 'todo-app-e9f78.firebaseapp.com',
-    storageBucket: 'todo-app-e9f78.firebasestorage.app',
-    measurementId: 'G-CZ4P56CMFG',
   );
 }
