@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/screens/auth_screen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   MainScreen({super.key});
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   Future<void> _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -22,23 +27,29 @@ class MainScreen extends StatelessWidget {
     }
   }
 
+  bool _isTaksClicked = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await _logout(context);
-              },
-              icon: Icon(Icons.logout_outlined))
-        ],
-        title: Text(
-          'All TODOs',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      // appBar: AppBar(
+      //   elevation: 1,
+      //   backgroundColor: Colors.white,
+      //   automaticallyImplyLeading: false,
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () async {
+      //           await _logout(context);
+      //         },
+      //         icon: Icon(Icons.logout_outlined))
+      //   ],
+      //   title: Center(
+      //     child: Text(
+      //       'All TODOs',
+      //       style: TextStyle(fontWeight: FontWeight.bold),
+      //     ),
+      //   ),
+      // ),
       body: Row(
         children: [
           // Sidebar For Tasks and List
@@ -51,15 +62,27 @@ class MainScreen extends StatelessWidget {
                 children: [
                   // Menu Title
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Menu',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Menu',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.login_outlined),
+                            onPressed: () {
+                              () async {
+                                await _logout(context);
+                              };
+                            },
+                          ),
+                        ],
+                      )),
                   const Divider(),
                   // Search Box
                   Padding(
@@ -79,9 +102,26 @@ class MainScreen extends StatelessWidget {
                   ),
                   const Divider(),
                   // Menu Items
-                  _buildMenuItem(Icons.event_note, 'Tasks', 12),
-                  _buildMenuItem(Icons.calendar_today, 'Calendar', 0),
-                  _buildMenuItem(Icons.sticky_note_2, 'Sticky Wall', 0),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _isTaksClicked = !_isTaksClicked;
+                      });
+                    },
+                    splashColor: Colors.green, // Ripple color on tap
+                    highlightColor: Colors.yellow
+                        .withOpacity(0.5), // Highlight color when pressed
+                    borderRadius: BorderRadius.circular(10),
+                    child: _buildMenuItem(Icons.event_note, 'Tasks', 12),
+                  ),
+                  InkWell(
+                      onTap: () {},
+                      child:
+                          _buildMenuItem(Icons.calendar_today, 'Calendar', 0)),
+                  InkWell(
+                      onTap: () {},
+                      child: _buildMenuItem(
+                          Icons.sticky_note_2, 'Sticky Wall', 0)),
                   const Divider(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -90,112 +130,122 @@ class MainScreen extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _buildMenuItem(Icons.circle, 'Personal', 3,
-                      color: Colors.red),
-                  _buildMenuItem(Icons.circle, 'Work', 6, color: Colors.blue),
-                  _buildMenuItem(Icons.circle, 'List 1', 3,
-                      color: Colors.yellow),
-                  _buildMenuItem(Icons.add, 'Add New List', 0),
+                  InkWell(
+                    onTap: () {},
+                    child: _buildMenuItem(Icons.circle, 'Personal', 3,
+                        color: Colors.red),
+                  ),
+                  InkWell(
+                      onTap: () {},
+                      child: _buildMenuItem(Icons.circle, 'Work', 6,
+                          color: Colors.blue)),
+                  InkWell(
+                    onTap: () {},
+                    child: _buildMenuItem(Icons.circle, 'Others', 3,
+                        color: Colors.yellow),
+                  ),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Tags',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      Chip(label: Text('Tag 1')),
-                      Chip(label: Text('Tag 2')),
-                      Chip(label: Text('+ Add Tag')),
-                    ],
-                  ),
                 ],
               ),
             ),
           ),
           // Task List
-          Expanded(
-            flex: 4,
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title and Task Count
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Today',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+
+          if (_isTaksClicked)
+            Expanded(
+              flex: 4,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title and Task Count
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Today',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '5',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            '5',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Add New Task Button
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.add),
-                      label: Text('Add New Task'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                        ],
                       ),
                     ),
-                  ),
-                  // Task List
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        _buildTaskItem(
-                          'Research content ideas',
-                          'List 1',
-                          false,
+                    // Add New Task Button
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                        label: Text('Add New Task'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
                         ),
-                        _buildTaskItem(
-                          'Create a database of guest authors',
-                          'Work',
-                          false,
-                        ),
-                        _buildTaskItem(
-                          'Renew driver\'s license',
-                          'Personal',
-                          true,
-                          dueDate: '22-03-22',
-                          subtasks: 1,
-                          color: Colors.red,
-                        ),
-                        _buildTaskItem(
-                          'Consult accountant',
-                          'List',
-                          true,
-                          subtasks: 3,
-                        ),
-                        _buildTaskItem('Print business card', '', false),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    // Task List
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          _buildTaskItem(
+                            'Research content ideas',
+                            'List 1',
+                            false,
+                          ),
+                          _buildTaskItem(
+                            'Create a database of guest authors',
+                            'Work',
+                            false,
+                          ),
+                          _buildTaskItem(
+                            'Renew driver\'s license',
+                            'Personal',
+                            true,
+                            dueDate: '22-03-22',
+                            subtasks: 1,
+                            color: Colors.red,
+                          ),
+                          _buildTaskItem(
+                            'Consult accountant',
+                            'List',
+                            true,
+                            subtasks: 3,
+                          ),
+                          _buildTaskItem('Print business card', '', false),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
+          if (!_isTaksClicked)
+            Expanded(
+              flex: 4,
+              child: Container(
+                child: Center(
+                  child: Text(
+                    'Nothing to view !',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        letterSpacing: 2.5),
+                  ),
+                ),
+              ),
+            ),
           // Task Details
           Expanded(
             flex: 3,
