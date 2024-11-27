@@ -158,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
                   InkWell(
                     onTap: () {},
                     child: _buildMenuItem(Icons.circle, 'Others', 3,
-                        color: Colors.yellow),
+                        color: Colors.grey),
                   ),
                   const Divider(),
                 ],
