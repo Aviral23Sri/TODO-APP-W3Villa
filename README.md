@@ -1,16 +1,51 @@
-# todo_app
 
-A new Flutter project.
+# To-Do App with User Authentication and Sticky Notes
 
-## Getting Started
+Welcome to the To-Do App, a feature-rich task management application that combines essential functionality with a sleek design. This project includes task management, user authentication, and sticky notes, all synchronized in real-time with a Firebase database. The app is fully optimized for both mobile and desktop platforms and can also be compiled into an Android application.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## 🔗 Live Demo
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Visit the live website: [To-Do App](https://aviral23sri.github.io/)
+## Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Realtime synchronization with the Firebase Firestore database ensures data consistency across devices.
+- Notes are displayed in a visually appealing grid layout and synced with the database.
+- Secure user login and signup functionalities using Firebase Authentication.
+- Optimized for both desktop and mobile devices.
+- The app is accessible as a web application and can be compiled into an Android app.
+
+
+## 🛠️ Technologies Used
+
+- Frontend: Flutter
+- Backend: Firebase
+- Database: Firestore
+- API: RESTful APIs for CRUD operations to interact with the database
+- Realtime Database Sync: Firebase ensures instant updates across devices
+## 💻 How to Run
+
+Clone the repository:
+```bash
+  git clone https://github.com/aviral23sri/todo-app.git
+```
+Navigate to the project directory:
+bash
+Copy code
+
+```bash
+  cd todo-app
+```
+Install dependencies:
+bash
+Copy code
+
+```bash
+  flutter pub get
+
+```
+For the web version:
+```bash
+  flutter run -d chrome
+
+```
