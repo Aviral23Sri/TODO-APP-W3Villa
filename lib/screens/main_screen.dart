@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/screens/auth_screen.dart';
 import 'package:todo_app/screens/calendar_screen.dart';
 import 'package:todo_app/screens/sticky_wall_screen.dart';
-import 'package:todo_app/screens/task_details_screen.dart';
 import 'package:todo_app/screens/tasks_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,10 +18,10 @@ class _MainScreenState extends State<MainScreen> {
       await FirebaseAuth.instance.signOut();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => AuthenticationScreen()),
+        MaterialPageRoute(builder: (context) => const AuthenticationScreen()),
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Logged out successfully!')),
+        const SnackBar(content: Text('Logged out successfully!')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,11 +67,11 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   // Menu Title
                   Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Menu',
                             style: TextStyle(
                               fontSize: 20,
@@ -83,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
                               onPressed: () async {
                                 await _logout(context);
                               },
-                              icon: Icon(Icons.logout_outlined)),
+                              icon: const Icon(Icons.logout_outlined)),
                         ],
                       )),
                   const Divider(),
@@ -93,7 +92,7 @@ class _MainScreenState extends State<MainScreen> {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Search',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -117,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
                     highlightColor: Colors.yellow
                         .withOpacity(0.5), // Highlight color when pressed
                     borderRadius: BorderRadius.circular(10),
-                    child: _buildMenuItem(Icons.event_note, 'Tasks', 12),
+                    child: _buildMenuItem(Icons.event_note, 'Tasks',),
                   ),
                   InkWell(
                       onTap: () {
@@ -128,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
                         });
                       },
                       child:
-                          _buildMenuItem(Icons.calendar_today, 'Calendar', 0)),
+                          _buildMenuItem(Icons.calendar_today, 'Calendar',)),
                   InkWell(
                       onTap: () {
                         setState(() {
@@ -138,9 +137,9 @@ class _MainScreenState extends State<MainScreen> {
                         });
                       },
                       child: _buildMenuItem(
-                          Icons.sticky_note_2, 'Sticky Wall', 0)),
+                          Icons.sticky_note_2, 'Sticky Wall',)),
                   const Divider(),
-                  Padding(
+                  const Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Lists',
@@ -149,16 +148,16 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   InkWell(
                     onTap: () {},
-                    child: _buildMenuItem(Icons.circle, 'Personal', 3,
+                    child: _buildMenuItem(Icons.circle, 'Personal', 
                         color: Colors.red),
                   ),
                   InkWell(
                       onTap: () {},
-                      child: _buildMenuItem(Icons.circle, 'Work', 6,
+                      child: _buildMenuItem(Icons.circle, 'Work', 
                           color: Colors.blue)),
                   InkWell(
                     onTap: () {},
-                    child: _buildMenuItem(Icons.circle, 'Others', 3,
+                    child: _buildMenuItem(Icons.circle, 'Others', 
                         color: Colors.grey),
                   ),
                   const Divider(),
@@ -172,7 +171,7 @@ class _MainScreenState extends State<MainScreen> {
             Expanded(
               flex: 4,
               child: Container(
-                color: Colors.white,
+                decoration: const BoxDecoration(),
                 child: TasksScreen(),
               ),
             ),
@@ -191,79 +190,17 @@ class _MainScreenState extends State<MainScreen> {
                 child: StickyWallScreen(),
               ),
             ),
-          
-          Expanded(
-            flex: 3,
-            child: Container(
-      color: Colors.grey[100],
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Task:',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Renew driver\'s license',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text('Description:'),
-          const SizedBox(height: 8),
-          TextField(
-            maxLines: 4,
-            decoration: InputDecoration(
-              hintText: 'Add details...',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text('List:'),
-          const SizedBox(height: 8),
-          DropdownButton<String>(
-            value: 'Personal',
-            items: ['Personal', 'Work', 'List 1']
-                .map((list) => DropdownMenuItem(
-                      value: list,
-                      child: Text(list),
-                    ))
-                .toList(),
-            onChanged: (value) {},
-          ),
-          const SizedBox(height: 16),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: Text('Delete Task'),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text('Save Changes'),
-          ),
-        ],
-      ),
-    ),
-          ),
+
         ],
       ),
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, int count,
+  Widget _buildMenuItem(IconData icon, String title, 
       {Color? color}) {
     return ListTile(
       leading: Icon(icon, color: color ?? Colors.black),
       title: Text(title),
-      trailing: count > 0 ? Text(count.toString()) : null,
     );
   }
 }

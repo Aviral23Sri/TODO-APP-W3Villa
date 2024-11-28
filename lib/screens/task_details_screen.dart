@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
-  TaskDetailsScreen({super.key,});
+  const TaskDetailsScreen({super.key,});
 
   @override
   State<TaskDetailsScreen> createState() {
@@ -18,21 +18,21 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Task:',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          TextField(
+          const TextField(
             decoration: InputDecoration(
               hintText: 'Renew driver\'s license',
               border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
-          Text('Description:'),
+          const Text('Description:'),
           const SizedBox(height: 8),
-          TextField(
+          const TextField(
             maxLines: 4,
             decoration: InputDecoration(
               hintText: 'Add details...',
@@ -40,7 +40,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text('List:'),
+          const Text('List:'),
           const SizedBox(height: 8),
           DropdownButton<String>(
             value: 'Personal',
@@ -60,12 +60,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: Text('Delete Task'),
+            child: const Text('Delete Task'),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Save Changes'),
+            child: const Text('Save Changes'),
           ),
         ],
       ),

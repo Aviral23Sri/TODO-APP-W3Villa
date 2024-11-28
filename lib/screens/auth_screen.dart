@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/screens/main_screen.dart';
 
 class AuthenticationScreen extends StatefulWidget {
+
+  const AuthenticationScreen({super.key});
   @override
   State<StatefulWidget> createState() {
     return _AuthenticationScreenState();
@@ -12,39 +14,72 @@ class AuthenticationScreen extends StatefulWidget {
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Controllers for input fields
+  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isLogin = true; // Toggle between Login and Sign-Up
+  bool _isLogin = true; 
   bool _isLoading = false;
 
-  // Handle user authentication (Login or Sign-Up)
+  // Email validation
+  String? _validateEmail(String email) {
+    if (email.isEmpty) {
+      return "Email cannot be empty.";
+    } else if (!email.contains('@')) {
+      return "Enter a valid email address.";
+    }
+    return null;
+  }
+
+  // Password validation
+  String? _validatePassword(String password) {
+    if (password.isEmpty) {
+      return "Password cannot be empty.";
+    } else if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    return null;
+  }
+
+
   Future<void> _authenticateUser() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
+      final emailError = _validateEmail(_emailController.text.trim());
+      final passwordError = _validatePassword(_passwordController.text.trim());
+
+      if (emailError != null || passwordError != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(emailError ?? passwordError!)),
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
       if (_isLogin) {
-        // Login logic
+     
         await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Logged in successfully!")),
+          const SnackBar(content: Text("Logged in successfully!")),
         );
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MainScreen()));
       } else {
-        // Sign-Up logic
+        
         await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Account created successfully!")),
+          const SnackBar(content: Text("Account created successfully!")),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -60,70 +95,94 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      body: Center(
-        child: Card(
-          margin: EdgeInsets.all(16),
-          elevation: 8,
-          child: Container(
-            padding: EdgeInsets.all(20),
-            width: 400,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _isLogin ? "Login" : "Sign Up",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white!, Colors.blue[800]!],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              width: screenWidth > 500 ? 400 : double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _isLogin ? "Login" : "Sign Up",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                // Email Input Field
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(height: 16),
-                // Password Input Field
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 16),
+                  // Password Input Field
+                  TextField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: "Password",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    obscureText: true,
                   ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 20),
-                // Action Button (Login/Sign-Up)
-                _isLoading
-                    ? CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _authenticateUser,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 48),
+                  const SizedBox(height: 20),
+                  
+                  _isLoading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _authenticateUser,
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                            backgroundColor: Colors.blue[800],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            _isLogin ? "Login" : "Sign Up",
+                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                         ),
-                        child: Text(_isLogin ? "Login" : "Sign Up"),
-                      ),
-                SizedBox(height: 10),
-                // Toggle between Login and Sign-Up
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                  child: Text(
-                    _isLogin
-                        ? "Don't have an account? Sign Up"
-                        : "Already have an account? Login",
+                  const SizedBox(height: 10),
+                 
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLogin = !_isLogin;
+                      });
+                    },
+                    child: Text(
+                      _isLogin
+                          ? "Don't have an account? Sign Up"
+                          : "Already have an account? Login",
+                      style: TextStyle(color: Colors.blue[800]),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

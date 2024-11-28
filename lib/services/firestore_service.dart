@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:todo_app/models/task_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Collection reference
   CollectionReference get tasksCollection => _db.collection('tasks');
 
-  // Fetch all tasks in real-time
   Stream<List<Task>> getTasks() {
-    return tasksCollection.snapshots().handleError((error) {
-      print('Error fetching tasks: $error');
-    }).map((snapshot) {
+    return tasksCollection.snapshots().handleError((error) {}).map((snapshot) {
       return snapshot.docs.map((doc) {
         return Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
@@ -23,7 +20,7 @@ class FirestoreService {
     try {
       await tasksCollection.add(task.toMap());
     } catch (e) {
-      print('Error adding task: $e');
+      SnackBar(content: Text(e.toString()));
     }
   }
 
@@ -34,7 +31,16 @@ class FirestoreService {
         'isCompleted': isCompleted,
       });
     } catch (e) {
-      print('Error updating task: $e');
+      SnackBar(content: Text(e.toString()));
+    }
+  }
+
+  // Method to update an existing task
+  Future<void> updateTask(Task task) async {
+    try {
+      await _db.collection('tasks').doc(task.id).update(task.toMap());
+    } catch (e) {
+      throw Exception('Error updating task: $e');
     }
   }
 
@@ -43,7 +49,7 @@ class FirestoreService {
     try {
       await tasksCollection.doc(taskId).delete();
     } catch (e) {
-      print('Error deleting task: $e');
+      SnackBar(content: Text(e.toString()));
     }
   }
 }

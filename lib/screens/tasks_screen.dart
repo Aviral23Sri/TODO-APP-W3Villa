@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/services/firestore_service.dart';
@@ -10,7 +11,7 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final FirestoreService _firestoreService = FirestoreService();
 
-  // Method to show dialog and add new tasks
+ 
   void _showAddTaskDialog(BuildContext context) {
     String? title;
     String? description;
@@ -25,38 +26,39 @@ class _TasksScreenState extends State<TasksScreen> {
           ),
           child: Container(
             padding: const EdgeInsets.all(24),
-            width: MediaQuery.of(context).size.width > 600 ? 500 : double.infinity,
+            width:
+                MediaQuery.of(context).size.width > 600 ? 500 : double.infinity,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
+                  const Text(
                     'Add New Task',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Task Title',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) => title = value,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Description',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) => description = value,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   DropdownButtonFormField<Category>(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Category',
                       border: OutlineInputBorder(),
                     ),
@@ -68,33 +70,38 @@ class _TasksScreenState extends State<TasksScreen> {
                     }).toList(),
                     onChanged: (value) => category = value,
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          if (title != null && title!.isNotEmpty && category != null) {
+                          if (title != null &&
+                              title!.isNotEmpty &&
+                              category != null) {
                             Task newTask = Task(
-                              id: '',  // Firestore will generate this when adding
+                              id: '', 
                               title: title!,
                               description: description ?? '',
                               category: category!,
                               isCompleted: false,
                             );
                             _firestoreService.addTask(newTask);
-                            Navigator.pop(context); // Close the dialog
+                            Navigator.pop(context); 
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Please provide both a title and a category.')),
+                              const SnackBar(
+                                  content: Text(
+                                      'Please provide both a title and a category.')),
+
                             );
                           }
                         },
-                        child: Text('Add Task'),
+                        child: const Text('Add Task'),
                       ),
                     ],
                   ),
@@ -124,7 +131,7 @@ class _TasksScreenState extends State<TasksScreen> {
       stream: _firestoreService.getTasks(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -135,7 +142,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 Text('Error: ${snapshot.error}'),
                 ElevatedButton(
                   onPressed: () => setState(() {}),
-                  child: Text('Retry'),
+                  child: const Text('Retry'),
                 ),
               ],
             ),
@@ -147,12 +154,12 @@ class _TasksScreenState extends State<TasksScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('No tasks available.', style: TextStyle(fontSize: 18)),
-                SizedBox(height: 20),
+                const Text('No tasks available.', style: TextStyle(fontSize: 18)),
+                const SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: () => _showAddTaskDialog(context),
-                  icon: Icon(Icons.add),
-                  label: Text('Add New Task'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add New Task'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -194,8 +201,8 @@ class _TasksScreenState extends State<TasksScreen> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton.icon(
                 onPressed: () => _showAddTaskDialog(context),
-                icon: Icon(Icons.add),
-                label: Text('Add New Task'),
+                icon: const Icon(Icons.add),
+                label: const Text('Add New Task'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
@@ -217,13 +224,116 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
+  Widget modifyTask(String taskId, String initialTitle, String initialDescription) {
+    
+    TextEditingController titleController =
+        TextEditingController(text: initialTitle);
+    TextEditingController descriptionController =
+        TextEditingController(text: initialDescription);
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Container(
+          color: Colors.grey[100],
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Task: ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  hintText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('Description:'),
+              const SizedBox(height: 8),
+             
+              TextField(
+                controller: descriptionController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: 'Add details...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('List:'),
+              const SizedBox(height: 8),
+              DropdownButton<String>(
+                value: 'Personal',
+                items: ['Personal', 'Work', 'List 1']
+                    .map((list) => DropdownMenuItem(
+                          value: list,
+                          child: Text(list),
+                        ))
+                    .toList(),
+                onChanged: (value) {},
+              ),
+              const SizedBox(height: 16),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  _deleteTask(taskId);
+                  Navigator.pop(context); 
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Delete Task'),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () {
+                 
+                  String updatedTitle = titleController.text;
+                  String updatedDescription = descriptionController.text;
+
+                 
+                  FirebaseFirestore.instance
+                      .collection('tasks')
+                      .doc(taskId)
+                      .update({
+                    'title': updatedTitle,
+                    'description': updatedDescription,
+                  });
+
+                  Navigator.pop(context); 
+                },
+                child: const Text('Save Changes'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildTaskItem(Task task) {
     return ListTile(
-      
+      onTap: () {
+        showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (BuildContext context) {
+            return modifyTask(task.id, task.title, task.description ??"");
+          },
+        );
+      },
       title: Text(
         task.title,
         style: TextStyle(
-          decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+          decoration: task.isCompleted
+              ? TextDecoration.lineThrough
+              : TextDecoration.none,
           color: task.isCompleted ? Colors.grey : Colors.black,
         ),
       ),
@@ -241,12 +351,15 @@ class _TasksScreenState extends State<TasksScreen> {
               setState(() {
                 task.isCompleted = value ?? false;
               });
-              await _firestoreService.updateTaskStatus(task.id, task.isCompleted); // Update in Firestore
+              await _firestoreService.updateTaskStatus(
+                  task.id, task.isCompleted); 
             },
           ),
-          SizedBox(width: 12,),
+          const SizedBox(
+            width: 12,
+          ),
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: () => _deleteTask(task.id),
           ),
         ],
@@ -262,7 +375,7 @@ class _TasksScreenState extends State<TasksScreen> {
         return Colors.orange;
       case Category.Others:
       default:
-        return Colors.yellow; 
+        return Colors.yellow;
     }
   }
 
