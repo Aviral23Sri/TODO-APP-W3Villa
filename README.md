@@ -49,3 +49,6 @@ For the web version:
   flutter run -d chrome
 
 ```
+## 📸 Video Sample
+
+https://github.com/user-attachments/assets/e13f9be6-74c3-4cbf-91d3-4e3e3703bf29
