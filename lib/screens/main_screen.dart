@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo_app/screens/auth_screen.dart';
 import 'package:todo_app/screens/calendar_screen.dart';
 import 'package:todo_app/screens/sticky_wall_screen.dart';
+import 'package:todo_app/screens/task_details_screen.dart';
 import 'package:todo_app/screens/tasks_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -190,75 +191,67 @@ class _MainScreenState extends State<MainScreen> {
                 child: StickyWallScreen(),
               ),
             ),
+          
           Expanded(
             flex: 3,
             child: Container(
-              color: Colors.grey[100],
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Task:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Renew driver\'s license',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('Description:'),
-                  const SizedBox(height: 8),
-                  TextField(
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: 'Add details...',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('List:'),
-                  const SizedBox(height: 8),
-                  DropdownButton<String>(
-                    value: 'Personal',
-                    items: ['Personal', 'Work', 'List 1']
-                        .map((list) => DropdownMenuItem(
-                              value: list,
-                              child: Text(list),
-                            ))
-                        .toList(),
-                    onChanged: (value) {},
-                  ),
-                  const SizedBox(height: 16),
-                  Text('Tags:'),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      Chip(label: Text('Tag 1')),
-                      Chip(label: Text('Tag 2')),
-                      Chip(label: Text('+ Add Tag')),
-                    ],
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: Text('Delete Task'),
-                  ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Save Changes'),
-                  ),
-                ],
-              ),
+      color: Colors.grey[100],
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Task:',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Renew driver\'s license',
+              border: OutlineInputBorder(),
             ),
+          ),
+          const SizedBox(height: 16),
+          Text('Description:'),
+          const SizedBox(height: 8),
+          TextField(
+            maxLines: 4,
+            decoration: InputDecoration(
+              hintText: 'Add details...',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text('List:'),
+          const SizedBox(height: 8),
+          DropdownButton<String>(
+            value: 'Personal',
+            items: ['Personal', 'Work', 'List 1']
+                .map((list) => DropdownMenuItem(
+                      value: list,
+                      child: Text(list),
+                    ))
+                .toList(),
+            onChanged: (value) {},
+          ),
+          const SizedBox(height: 16),
+          const Spacer(),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('Delete Task'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text('Save Changes'),
+          ),
+        ],
+      ),
+    ),
           ),
         ],
       ),

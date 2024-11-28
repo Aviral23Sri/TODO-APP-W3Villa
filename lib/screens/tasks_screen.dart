@@ -219,6 +219,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   Widget _buildTaskItem(Task task) {
     return ListTile(
+      
       title: Text(
         task.title,
         style: TextStyle(
