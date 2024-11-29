@@ -27,7 +27,7 @@ Visit the live website: [To-Do App](https://aviral23sri.github.io/)
 
 Clone the repository:
 ```bash
-  git clone https://github.com/aviral23sri/todo-app.git
+  https://github.com/Aviral23Sri/TODO-APP-W3Villa.git
 ```
 Navigate to the project directory:
 bash
