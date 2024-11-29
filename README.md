@@ -34,7 +34,7 @@ bash
 Copy code
 
 ```bash
-  cd todo-app
+  cd Aviral23Sri/TODO-APP-W3Villa
 ```
 Install dependencies:
 bash
