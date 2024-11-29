@@ -12,7 +12,7 @@ Visit the live website: [To-Do App](https://aviral23sri.github.io/)
 - Realtime synchronization with the Firebase Firestore database ensures data consistency across devices.
 - Notes are displayed in a visually appealing grid layout and synced with the database.
 - Secure user login and signup functionalities using Firebase Authentication.
-- Optimized for both desktop and mobile devices.
+- Optimized difffrent screen size.
 - The app is accessible as a web application and can be compiled into an Android app.
 
 
